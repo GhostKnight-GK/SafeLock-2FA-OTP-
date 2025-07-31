@@ -8,7 +8,7 @@ from datetime import datetime, timedelta
 import secrets
 
 app = Flask(__name__)
-app.secret_key = '23n31a6216'  # Change this before production!
+app.secret_key = '23n31a6216' 
 bcrypt = Bcrypt(app)
 
 # MongoDB Atlas configuration

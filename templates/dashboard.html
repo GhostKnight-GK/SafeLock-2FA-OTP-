@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dashboard - SafeLock</title>
+  <style>
+    @import url("https://fonts.googleapis.com/css2?family=Inter&display=swap");
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Inter, Arial, sans-serif;
+    }
+    body {
+      background: #f4f4f4;
+      color: #333;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px;
+    }
+    body.dark-mode {
+      background: linear-gradient(to bottom, #000000, #1a1a1a);
+      color: #f0f0f0;
+    }
+    #theme-toggle {
+      all: unset;
+      cursor: pointer;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background-color: #eee;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      box-shadow: 0 0 5px rgba(255, 255, 0, 0.5);
+      transition: background-color 0.4s ease;
+      z-index: 1000;
+    }
+    body.dark-mode #theme-toggle {
+      background-color: #555;
+      box-shadow: 0 0 5px rgba(100, 100, 255, 0.5);
+    }
+    #theme-toggle svg {
+      width: 30px;
+      height: 30px;
+      position: absolute;
+      transition: all 0.4s ease;
+      stroke: currentColor;
+    }
+    #sun-icon {
+      opacity: 1;
+      transform: rotate(0deg) scale(1);
+      color: orange;
+    }
+    body.dark-mode #sun-icon {
+      opacity: 0;
+      transform: rotate(90deg) scale(0.5);
+    }
+    #moon-icon {
+      opacity: 0;
+      transform: rotate(-90deg) scale(0.5);
+      color: yellow;
+    }
+    body.dark-mode #moon-icon {
+      opacity: 1;
+      transform: rotate(0deg) scale(1);
+    }
+    .container {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      padding: 40px 50px;
+      max-width: 600px;
+      width: 100%;
+      text-align: center;
+    }
+    body.dark-mode .container {
+      background-color: rgba(0, 0, 0, 0.75);
+      box-shadow: 0 0 20px rgba(0,0,0,0.8);
+    }
+    h1 {
+      margin-bottom: 15px;
+      font-size: 32px;
+    }
+    .welcome-msg {
+      font-size: 20px;
+      margin-bottom: 30px;
+      color: #28a745;
+      font-weight: 600;
+    }
+    a.logout-btn {
+      display: inline-block;
+      padding: 12px 30px;
+      background-color: #dc3545;
+      color: white;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 700;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+    a.logout-btn:hover {
+      background-color: #c82333;
+      transform: scale(1.05);
+    }
+    @media (max-width: 600px) {
+      .container {
+        padding: 30px 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Theme Toggle -->
+  <button id="theme-toggle" aria-label="Toggle dark/light theme">
+    <svg id="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+    <svg id="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+    </svg>
+  </button>
+
+  <div class="container">
+    <h1>🎉 Welcome to SafeLock Dashboard</h1>
+    <p class="welcome-msg">Hello, <strong>{{ session.get('email') }}</strong>! You have successfully logged in.</p>
+    <a href="{{ url_for('logout') }}" class="logout-btn">Logout</a>
+  </div>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') {
+      document.body.classList.add('dark-mode');
+    }
+    themeToggle.addEventListener('click', () => {
+      document.body.classList.toggle('dark-mode');
+      localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Enter OTP - SafeLock</title>
+  <style>
+    @import url("https://fonts.googleapis.com/css2?family=Inter&display=swap");
+
+    * {
+      padding: 0;
+      margin: 0;
+      box-sizing: border-box;
+      font-family: Inter, Arial, sans-serif;
+    }
+
+    body {
+      width: 100%;
+      background: #f4f4f4;
+      color: #333;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      flex-direction: column;
+    }
+
+    .container {
+      border-radius: 12px;
+      background-color: #fff;
+      width: 90%;
+      max-width: 500px;
+      padding: 40px 30px;
+      text-align: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    h1.title {
+      font-size: 25px;
+      margin-bottom: 30px;
+    }
+
+    #otp-form {
+      width: 100%;
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #otp-form input {
+      border: none;
+      background-color: #121517;
+      color: white;
+      font-size: 32px;
+      text-align: center;
+      padding: 10px;
+      width: 60px;
+      height: 60px;
+      border-radius: 5px;
+      outline: 2px solid rgb(66, 66, 66);
+      caret-color: white;
+      user-select: text;
+    }
+
+    #otp-form input:focus-visible {
+      outline: 2px solid royalblue;
+    }
+
+    #otp-form input.filled {
+      outline: 2px solid rgb(7, 192, 99);
+    }
+
+    #verify-btn {
+      cursor: pointer;
+      display: inline-block;
+      margin-top: 30px;
+      background-color: #28a745;
+      color: white;
+      padding: 12px 0;
+      width: 100%;
+      max-width: 500px;
+      border-radius: 5px;
+      font-size: 18px;
+      border: none;
+      font-weight: bold;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    #verify-btn:hover {
+      background-color: #218838;
+      transform: scale(1.05);
+    }
+
+    ul {
+      color: red;
+      padding-left: 20px;
+      margin-bottom: 20px;
+      text-align: left;
+      max-width: 500px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    body.dark-mode {
+      background: linear-gradient(to bottom, #000000, #1a1a1a);
+      color: #f0f0f0;
+    }
+
+    body.dark-mode .container {
+      background-color: rgba(0,0,0,0.75);
+      box-shadow: 0 0 20px rgba(0,0,0,0.8);
+    }
+
+    body.dark-mode #otp-form input {
+      background-color: #222;
+      color: #f0f0f0;
+      border-color: #555;
+      caret-color: #f0f0f0;
+    }
+
+    body.dark-mode #otp-form input:focus-visible {
+      outline-color: #28a745;
+      box-shadow: 0 0 8px #28a745;
+    }
+
+    body.dark-mode #verify-btn {
+      background-color: #28a745;
+      color: white;
+    }
+
+    body.dark-mode #verify-btn:hover {
+      background-color: #218838;
+    }
+
+    #theme-toggle {
+      all: unset;
+      cursor: pointer;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background-color: #eee;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      box-shadow: 0 0 5px rgba(255, 255, 0, 0.5);
+      transition: background-color 0.4s ease;
+      z-index: 1000;
+    }
+
+    body.dark-mode #theme-toggle {
+      background-color: #555;
+      box-shadow: 0 0 5px rgba(100, 100, 255, 0.5);
+    }
+
+    #theme-toggle svg {
+      width: 30px;
+      height: 30px;
+      position: absolute;
+      transition: all 0.4s ease;
+      stroke: currentColor;
+    }
+
+    #sun-icon {
+      opacity: 1;
+      transform: rotate(0deg) scale(1);
+      color: orange;
+    }
+
+    body.dark-mode #sun-icon {
+      opacity: 0;
+      transform: rotate(90deg) scale(0.5);
+    }
+
+    #moon-icon {
+      opacity: 0;
+      transform: rotate(-90deg) scale(0.5);
+      color: yellow;
+    }
+
+    body.dark-mode #moon-icon {
+      opacity: 1;
+      transform: rotate(0deg) scale(1);
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        width: 90%;
+        padding: 30px 20px;
+      }
+      #otp-form input {
+        width: 45px;
+        height: 45px;
+        font-size: 24px;
+      }
+      #verify-btn {
+        font-size: 16px;
+        padding: 10px 0;
+      }
+      #theme-toggle {
+        width: 40px;
+        height: 40px;
+      }
+      #theme-toggle svg {
+        width: 24px;
+        height: 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Theme Toggle -->
+  <button id="theme-toggle" aria-label="Toggle dark/light theme">
+    <svg id="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+    <svg id="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+    </svg>
+  </button>
+
+  <div class="container">
+    <h1 class="title">Enter OTP</h1>
+
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <ul>
+          {% for msg in messages %}
+            <li>{{ msg }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+
+    <form id="otp-form" action="{{ url_for('otp') }}" method="POST" autocomplete="off">
+      <input type="text" class="otp-input" maxlength="1" name="otp1" inputmode="numeric" pattern="[0-9]*" required>
+      <input type="text" class="otp-input" maxlength="1" name="otp2" inputmode="numeric" pattern="[0-9]*" required>
+      <input type="text" class="otp-input" maxlength="1" name="otp3" inputmode="numeric" pattern="[0-9]*" required>
+      <input type="text" class="otp-input" maxlength="1" name="otp4" inputmode="numeric" pattern="[0-9]*" required>
+      <input type="text" class="otp-input" maxlength="1" name="otp5" inputmode="numeric" pattern="[0-9]*" required>
+      <input type="text" class="otp-input" maxlength="1" name="otp6" inputmode="numeric" pattern="[0-9]*" required>
+      <button type="submit" style="display: none;"></button>
+    </form>
+
+    <button id="verify-btn" type="button">Verify OTP</button>
+  </div>
+
+  <script>
+    // Theme toggle
+    const themeToggle = document.getElementById('theme-toggle');
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') {
+      document.body.classList.add('dark-mode');
+    }
+    themeToggle.addEventListener('click', () => {
+      document.body.classList.toggle('dark-mode');
+      localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+    });
+
+    const form = document.querySelector("#otp-form");
+    const inputs = document.querySelectorAll(".otp-input");
+    const verifyBtn = document.querySelector("#verify-btn");
+
+    const isAllInputFilled = () => Array.from(inputs).every(input => input.value.trim() !== "");
+
+    const getOtpText = () => Array.from(inputs).map(input => input.value).join("");
+
+    const toggleFilledClass = (input) => {
+      if (input.value.trim() !== "") {
+        input.classList.add("filled");
+      } else {
+        input.classList.remove("filled");
+      }
+    };
+
+    const verifyOTP = () => {
+      if (isAllInputFilled()) {
+        form.submit();
+      } else {
+        alert("Please enter all 6 digits of the OTP.");
+      }
+    };
+
+    form.addEventListener("input", e => {
+      const target = e.target;
+      toggleFilledClass(target);
+      if (target.value.length === 1 && target.nextElementSibling) {
+        target.nextElementSibling.focus();
+      }
+    });
+
+    inputs.forEach((input) => {
+      toggleFilledClass(input);
+
+      input.addEventListener("paste", e => {
+        e.preventDefault();
+        const pasteData = e.clipboardData.getData("text").trim();
+        for (let i = 0; i < inputs.length; i++) {
+          inputs[i].value = pasteData[i] || "";
+          toggleFilledClass(inputs[i]);
+        }
+        if (pasteData.length >= inputs.length) {
+          inputs[inputs.length - 1].focus();
+        } else {
+          inputs[pasteData.length]?.focus();
+        }
+      });
+
+      input.addEventListener("keydown", e => {
+        if (e.key === "Backspace") {
+          if (input.value === "") {
+            if (input.previousElementSibling) {
+              input.previousElementSibling.focus();
+            }
+          } else {
+            input.value = "";
+            toggleFilledClass(input);
+            e.preventDefault();
+          }
+        } else if (input.value.length === 1 && input.nextElementSibling && !["ArrowLeft", "ArrowRight", "Tab"].includes(e.key)) {
+          input.nextElementSibling.focus();
+        }
+      });
+    });
+
+    verifyBtn.addEventListener("click", verifyOTP);
+  </script>
+</body>
+</html>

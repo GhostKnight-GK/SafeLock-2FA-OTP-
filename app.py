@@ -16,7 +16,7 @@ MONGO_URI = "mongodb+srv://safelock_user:hTm_9-3CD7NRQsa@cluster0.h5r2sgl.mongod
 client = MongoClient(MONGO_URI)
 db = client["safelock_db"]
 users_collection = db["users"]
-
+ 
 # Gmail SMTP credentials — replace with your email & app password
 EMAIL_ADDRESS = 'safelock.official13@gmail.com'
 EMAIL_PASSWORD = 'iqrw elqs spig rnst'
